@@ -1,21 +1,20 @@
 import socket
 
-s = socket.socket()
-
-port = 12345
-
-s.bind(("", port))
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind(('', 1234))
 
 s.listen(5)
 
-while(True):
+while True:
     c, addr = s.accept()
-    print("Connection from", addr)
-    data_recived = c.recv(1024)
-
-    if not data_recived:
-        c.sendall("No has mandado nada. Cerrando conexion")
+    print("Conexion de ", addr)
+    recivido = c.recv(1024).decode()
+    print(recivido)
+    if recivido == "hola":
+        c.send('Adios'.encode())
+    elif recivido == "adios":
+        c.send("servidor cerrado".encode())
         break
     else:
-        print(data_recived)
-        
+        c.send(b'Un hola no costaba')
+    c.close()
